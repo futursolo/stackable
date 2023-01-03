@@ -6,14 +6,14 @@ use yew::prelude::*;
 use yew_router::BrowserRouter;
 
 #[derive(Properties, PartialEq, Clone)]
-pub struct StackableRootProps {
+pub(crate) struct StackableRootProps {
     #[prop_or_default]
     pub children: Html,
     pub bridge: Bridge,
 }
 
 #[function_component]
-pub fn Inner(props: &StackableRootProps) -> Html {
+pub(crate) fn Inner(props: &StackableRootProps) -> Html {
     let StackableRootProps { children, bridge } = props.clone();
     let set_bridge = use_atom_setter::<BridgeState>();
 
@@ -33,7 +33,7 @@ pub fn Inner(props: &StackableRootProps) -> Html {
 }
 
 #[function_component]
-pub fn StackableRoot<COMP>(props: &StackableRootProps) -> Html
+pub(crate) fn StackableRoot<COMP>(props: &StackableRootProps) -> Html
 where
     COMP: BaseComponent,
 {

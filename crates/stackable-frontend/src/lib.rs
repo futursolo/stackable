@@ -1,3 +1,7 @@
+//! Stackable Frontend.
+//!
+//! This crate contains the frontend renderer and useful utilities for stackable applications.
+
 #![deny(clippy::all)]
 #![deny(missing_debug_implementations)]
 
@@ -11,6 +15,9 @@ pub mod components;
 mod root;
 pub mod trace;
 
+/// The Stackable Frontend Renderer.
+///
+/// This type wraps the [Yew Renderer](yew::Renderer) and provides additional features.
 #[derive(Debug)]
 pub struct Renderer<COMP>
 where
@@ -35,6 +42,7 @@ impl<COMP> Renderer<COMP>
 where
     COMP: BaseComponent,
 {
+    /// Creates a Renderer with default props.
     pub fn new() -> Renderer<COMP>
     where
         COMP::Properties: Default,
@@ -42,6 +50,7 @@ where
         Self::with_props(Default::default())
     }
 
+    /// Creates a Renderer with specified props.
     pub fn with_props(props: COMP::Properties) -> Renderer<COMP> {
         Renderer {
             props,
@@ -50,6 +59,7 @@ where
         }
     }
 
+    /// Connects a bridge to the application.
     pub fn bridge(mut self, bridge: Bridge) -> Self {
         self.bridge = Some(bridge);
 
@@ -69,6 +79,10 @@ where
         yew::Renderer::with_props(props)
     }
 
+    /// Renders the application.
+    ///
+    /// Whether the application is rendered or hydrated is determined automatically based on whether
+    /// SSR is used on the server side for this page.
     pub fn render(self) {
         let renderer = self.into_yew_renderer();
 

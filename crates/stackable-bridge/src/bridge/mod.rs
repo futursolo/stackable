@@ -1,6 +1,5 @@
 use std::any::TypeId;
 use std::fmt;
-use std::hash::Hash;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
@@ -20,6 +19,7 @@ struct Incoming<'a> {
     input: &'a [u8],
 }
 
+/// The Bridge Builder.
 #[derive(Default)]
 pub struct BridgeBuilder {
     #[cfg(feature = "resolvable")]
@@ -33,6 +33,7 @@ pub struct BridgeBuilder {
 }
 
 impl BridgeBuilder {
+    /// Adds a query.
     pub fn add_query<T>(self) -> Self
     where
         T: 'static + BridgedQuery,
@@ -40,6 +41,7 @@ impl BridgeBuilder {
         self.add_query_impl::<T>()
     }
 
+    /// Adds a mutation.
     pub fn add_mutation<T>(self) -> Self
     where
         T: 'static + BridgedMutation,
@@ -47,6 +49,7 @@ impl BridgeBuilder {
         self.add_mutation_impl::<T>()
     }
 
+    /// Selects the token from a bounce state.
     pub fn with_token_selector<T>(self) -> Self
     where
         T: 'static + Selector + AsRef<str>,
@@ -54,6 +57,7 @@ impl BridgeBuilder {
         self.with_token_selector_impl::<T>()
     }
 
+    /// Creates a bridge.
     pub fn build(self) -> Bridge {
         static ID: AtomicUsize = AtomicUsize::new(0);
         let id = ID.fetch_add(1, Ordering::AcqRel);
@@ -338,6 +342,9 @@ mod not_feat_resolvable {
 #[cfg(not(feature = "resolvable"))]
 use not_feat_resolvable::*;
 
+/// A bridge to resolve requests.
+///
+/// See module documentation for more information.
 pub struct Bridge {
     inner: Arc<BridgeBuilder>,
     id: usize,
@@ -358,17 +365,13 @@ impl PartialEq for Bridge {
 }
 impl Eq for Bridge {}
 
-impl Hash for Bridge {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        state.write_usize(self.id);
-    }
-}
-
 impl Bridge {
+    /// Creates a bridge builder.
     pub fn builder() -> BridgeBuilder {
         BridgeBuilder::default()
     }
 
+    /// Connects a bridge.
     pub async fn connect<CTX>(
         self,
         metadata: BridgeMetadata<CTX>,
@@ -403,6 +406,7 @@ impl Clone for Bridge {
     }
 }
 
+/// A connected bridge.
 #[derive(Debug)]
 pub struct ConnectedBridge<CTX> {
     metadata: BridgeMetadata<CTX>,

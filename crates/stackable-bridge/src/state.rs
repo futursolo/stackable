@@ -1,14 +1,20 @@
+//! States used by the frontend and backend.
+//!
+//! These states are registered automatically if you use backend endpoint or frontend renderer.
+
 use std::rc::Rc;
 
 use bounce::Atom;
 
 use crate::{Bridge, BridgeMetadata};
 
+/// The bridge state.
 #[derive(Atom, PartialEq, Eq, Default, Debug)]
 pub struct BridgeState {
     pub inner: Bridge,
 }
 
+/// The bridge metadata state.
 #[derive(Atom, Debug)]
 pub struct BridgeMetadataState<CTX> {
     pub(crate) _inner: Option<Rc<BridgeMetadata<CTX>>>,

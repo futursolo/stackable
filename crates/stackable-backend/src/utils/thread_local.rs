@@ -1,10 +1,12 @@
 //! A type to clone fn once per thread.
 
 use std::fmt;
+use std::ops::Deref;
 use std::sync::{Arc, Mutex};
 
 use thread_local::ThreadLocal;
 
+/// A value that is lazily initialised once per thread.
 pub struct ThreadLocalLazy<T: Send> {
     value: Arc<ThreadLocal<T>>,
     create_value: Arc<dyn Send + Sync + Fn() -> T>,
@@ -32,6 +34,9 @@ impl<T> ThreadLocalLazy<T>
 where
     T: 'static + Send,
 {
+    /// Creates a thread-local lazy value.
+    ///
+    /// The create function is called once per thread.
     pub fn new<F>(f: F) -> Self
     where
         F: 'static + Send + Fn() -> T,
@@ -47,8 +52,15 @@ where
             create_value: Arc::new(create_inner),
         }
     }
+}
 
-    pub fn get(&self) -> &T {
-        self.value.get_or(|| (self.create_value)())
+impl<T> Deref for ThreadLocalLazy<T>
+where
+    T: 'static + Send,
+{
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.value.get_or(&*self.create_value)
     }
 }

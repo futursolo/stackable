@@ -105,6 +105,8 @@ where
 }
 
 /// A handle returned by [`use_bridged_query`].
+///
+/// This type dereferences to [`QueryResult<T>`].
 pub struct UseBridgedQueryHandle<T>
 where
     T: BridgedQuery + 'static,
@@ -160,6 +162,7 @@ where
     }
 }
 
+/// Bridges a query.
 #[hook]
 pub fn use_bridged_query<Q>(input: Rc<Q::Input>) -> SuspensionResult<UseBridgedQueryHandle<Q>>
 where

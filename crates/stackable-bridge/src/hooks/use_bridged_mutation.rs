@@ -74,11 +74,7 @@ where
 
 /// A handle returned by [`use_bridged_mutation`].
 ///
-/// Returns the result of last finished mutation (if any).
-///
-/// - `None` indicates that a mutation is currently loading or has yet to start(idling).
-/// - `Some(Ok(m))` indicates that the last mutation is successful and the content is stored in `m`.
-/// - `Some(Err(e))` indicates that the last mutation has failed and the error is stored in `e`.
+/// This can be used to access the result or start the mutation.
 pub struct UseBridgedMutationHandle<T>
 where
     T: BridgedMutation + 'static,
@@ -95,6 +91,12 @@ where
         self.inner.run(input).await?.inner.clone()
     }
 
+    /// Returns the result of last finished mutation (if any).
+    ///
+    /// - `None` indicates that a mutation is currently loading or has yet to start(idling).
+    /// - `Some(Ok(m))` indicates that the last mutation is successful and the content is stored in
+    ///   `m`.
+    /// - `Some(Err(e))` indicates that the last mutation has failed and the error is stored in `e`.
     pub fn result(&self) -> Option<&MutationResult<T>> {
         match self.inner.result()? {
             Ok(m) => Some(&m.inner),
@@ -125,6 +127,7 @@ where
     }
 }
 
+/// Bridges a mutation.
 #[hook]
 pub fn use_bridged_mutation<T>() -> UseBridgedMutationHandle<T>
 where

@@ -634,6 +634,9 @@ impl Stackctl {
     }
 }
 
+/// Runs stackctl.
+///
+/// This is the main function for a vendored copy of stackctl.
 pub async fn main() -> Result<()> {
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer().pretty())

@@ -132,6 +132,7 @@ where
 mod feat_warp_filter {
     use std::fmt::Write;
     use std::future::Future;
+    use std::ops::Deref;
     use std::rc::Rc;
 
     use bounce::helmet::render_static;
@@ -227,9 +228,9 @@ mod feat_warp_filter {
             let affix_bridge_context = self.affix_bridge_context.clone();
 
             let create_render_inner = move |props, tx: sync_oneshot::Sender<String>| async move {
-                let props = (affix_context.get())(props).await;
+                let props = (affix_context.deref())(props).await;
                 let bridge_metadata =
-                    Rc::new((affix_bridge_context.get())(BridgeMetadata::new()).await);
+                    Rc::new((affix_bridge_context.deref())(BridgeMetadata::new()).await);
 
                 let mut head_s = String::new();
                 let mut body_s = String::new();

@@ -1,3 +1,5 @@
+//! Hooks used to resolve requests.
+
 mod use_bridged_mutation;
 mod use_bridged_query;
 

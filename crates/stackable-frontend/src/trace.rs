@@ -5,6 +5,7 @@ use tracing_subscriber::prelude::*;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_web::{performance_layer, MakeConsoleWriter};
 
+/// Initialises [`tracing`] with default parameters.
 pub fn init_default(min_level: LevelFilter) {
     let fmt_layer = tracing_subscriber::fmt::layer()
         .with_ansi(false)
