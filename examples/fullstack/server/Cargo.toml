@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 anyhow = "1"
 stackable-backend = { version = "0.1.0", path = "../../../crates/stackable-backend", features = ["cli"] }
-tokio = { version = "1.23.0", features = ["full"] }
+tokio = { version = "1.24.1", features = ["full"] }
 tracing = { version = "0.1.37" }
 yew = "0.20.0"
 
